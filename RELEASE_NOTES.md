@@ -4,6 +4,12 @@
 
 1. robotag cannot evaluate tags properly for Scenarios and Scenario Outlines that are specified on the Feature level.
 
+## version 2.0.0
+
+### Notes
+
+1. add #tag_all_with method
+
 ## version 1.0.0
 
 ### Notes
