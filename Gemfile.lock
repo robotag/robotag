@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    robotag (0.0.1)
+    robotag (1.0.0)
       cql (~> 1.7)
 
 GEM
