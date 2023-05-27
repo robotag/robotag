@@ -34,9 +34,9 @@ describe Robotag do
     before do
       FileUtils.rm_rf(tmpdir)
     end
-    # after do
-    #   FileUtils.rm_rf(tmpdir)
-    # end
+    after do
+      FileUtils.rm_rf(tmpdir)
+    end
     it "can tag all tests matching a regex with @foo" do
       match_regex = /I visit the my tweets page/
       tag = '@foo'
@@ -53,6 +53,36 @@ describe Robotag do
             seek -= 1
             actual_tags = File.readlines(feature)[seek].chomp.split(' ')
             expect(actual_tags).to include(tag)
+          end
+        end
+      end
+    end
+  end
+
+  describe "#remove_all" do
+    let(:tmpdir) { "robotag_preview" }
+    before do
+      FileUtils.rm_rf(tmpdir)
+    end
+    after do
+      FileUtils.rm_rf(tmpdir)
+    end
+    it "can remove the tag @wip from all tests matching a regex" do
+      match_regex = /I visit the I'm following \@elom page/
+      tag = '@wip'
+      @robotag.tests_with_steps_that_match(match_regex).remove_all(tag).preview
+      Dir.glob(tmpdir + "/**/*").filter {|path| path.include?(".feature")}.each do |feature|
+        File.readlines(feature).each_with_index do |line, idx|
+          if (line =~ match_regex)
+            seek = idx -1
+            seek_contents = File.readlines(feature)[seek]
+            until seek_contents =~ /Scenario/
+              seek -= 1
+              seek_contents = File.readlines(feature)[seek]
+            end
+            seek -= 1
+            actual_tags = File.readlines(feature)[seek].chomp.split(' ')
+            expect(actual_tags).not_to include(tag)
           end
         end
       end

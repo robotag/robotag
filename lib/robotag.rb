@@ -36,35 +36,44 @@ class Robotag
   def tag_all_with(tag)
     warn('This script will potentially rewrite all of your feature files. Please be patient and remember to tip your source control system.') # rubocop:disable Metrics/LineLength
 
-    # Analysis and output
-    self.chain_state.map { |query_result| query_result[:self] }.each do |test|
-      if (test.is_a?(CukeModeler::Scenario) || test.is_a?(CukeModeler::Outline))
-        add_tag(test, tag)
-      else
-        raise("Unknown test type: #{test.class}")
-      end
-    end
+    analysis_and_output(tag, :add)
     self
   end
 
-  def add_tag(test, tag)
-    return if has_tag?(test, tag)
+  def remove_all(tag)
+    warn('This script will potentially rewrite all of your feature files. Please be patient and remember to tip your source control system.') # rubocop:disable Metrics/LineLength
 
-    tag_test(test, tag)
+    analysis_and_output(tag, :remove)
+    self
   end
 
-  def tag_test(test, tag)
+  def process_tag(test, tag, action)
+    if action == :add
+      return if has_tag?(test, tag)
+    elsif action == :remove
+      return unless has_tag?(test, tag)
+    end
+
+    modify_test_tag(test, tag, action)
+  end
+
+  def modify_test_tag(test, tag, action)
     feature_file = test.get_ancestor(:feature_file)
     file_path = feature_file.path
 
     tag_index = (test.source_line - 2)
 
     file_lines = if self.write_directives[file_path].nil?
-                  File.readlines(file_path)
-                else
-                  self.write_directives[file_path].split("\n").map {|line| line + "\n"}
-                end
-    file_lines[tag_index] = "#{file_lines[tag_index].chomp} #{tag}\n"
+                   File.readlines(file_path)
+                 else
+                   self.write_directives[file_path].split("\n").map { |line| line + "\n" }
+                 end
+
+    if action == :add
+      file_lines[tag_index] = "#{file_lines[tag_index].chomp} #{tag}\n"
+    elsif action == :remove
+      file_lines[tag_index].delete!(tag)
+    end
 
     self.write_directives[file_path] = file_lines.join
 
@@ -98,6 +107,18 @@ class Robotag
       end
     else
       self.chain_state
+    end
+  end
+
+  private
+
+  def analysis_and_output(tag, action)
+    self.chain_state.map { |query_result| query_result[:self] }.each do |test|
+      if (test.is_a?(CukeModeler::Scenario) || test.is_a?(CukeModeler::Outline))
+        process_tag(test, tag, action)
+      else
+        raise("Unknown test type: #{test.class}")
+      end
     end
   end
 end

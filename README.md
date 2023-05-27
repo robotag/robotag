@@ -6,7 +6,7 @@
 
 ```ruby
 source "https://rubygems.org"
-gem 'robotag', '~> 2.0.0'
+gem 'robotag', '~> 3.0.0'
 ```
 
 with a file `my_robotagger.rb` in the directory that contains your suite in a folder `features`
@@ -26,4 +26,8 @@ robotag.tests_with_steps_that_match(regex_i_care_about).tag_all_with(tag_i_care_
 
 # apply the changes
 robotag.tests_with_steps_that_match(regex_i_care_about).tag_all_with(tag_i_care_about).go!
+
+# preview changes to remove the tag @lorgin from all tests with a step matching /I go to the login page/
+tag_i_care_to_remove = '@lorgin'
+robotag.tests_with_steps_that_match(regex_i_care_about).remove_all(tag_i_care_to_remove).preview
 ```
