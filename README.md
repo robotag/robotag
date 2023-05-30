@@ -6,7 +6,7 @@
 
 ```ruby
 source "https://rubygems.org"
-gem 'robotag', '~> 3.0.0'
+gem 'robotag', '~> 3.0.1'
 ```
 
 with a file `my_robotagger.rb` in the directory that contains your suite in a folder `features`

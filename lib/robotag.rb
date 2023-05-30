@@ -72,7 +72,7 @@ class Robotag
     if action == :add
       file_lines[tag_index] = "#{file_lines[tag_index].chomp} #{tag}\n"
     elsif action == :remove
-      file_lines[tag_index].delete!(tag)
+      file_lines[tag_index].gsub!(tag, '')
     end
 
     self.write_directives[file_path] = file_lines.join

@@ -4,6 +4,12 @@
 
 1. robotag cannot evaluate tags properly for Scenarios and Scenario Outlines that are specified on the Feature level.
 
+## version 3.0.1
+
+### Notes
+
+1. Bugfix for remove tag
+
 ## version 3.0.0
 
 ### Notes

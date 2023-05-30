@@ -64,9 +64,9 @@ describe Robotag do
     before do
       FileUtils.rm_rf(tmpdir)
     end
-    after do
-      FileUtils.rm_rf(tmpdir)
-    end
+    # after do
+    #   FileUtils.rm_rf(tmpdir)
+    # end
     it "can remove the tag @wip from all tests matching a regex" do
       match_regex = /I visit the I'm following \@elom page/
       tag = '@wip'
@@ -84,6 +84,9 @@ describe Robotag do
             actual_tags = File.readlines(feature)[seek].chomp.split(' ')
             expect(actual_tags).not_to include(tag)
           end
+        end
+        File.readlines(feature).each do |line|
+          expect(line).not_to include("follong")
         end
       end
     end

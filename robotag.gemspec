@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "robotag"
-  s.version     = "3.0.0"
+  s.version     = "3.0.1"
   s.summary     = "robotag - a gem for automating organizing a Ruby Cucumber suite with tags"
   s.description = "robotag analyzes a cucumber suite. It finds Scenarios and Scenario outlines with steps that match certain patterns. It ensures that the associated scenarios or outlines contain or do not contain certain tags"
   s.authors     = ["David West"]
